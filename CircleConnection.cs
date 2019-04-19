@@ -270,9 +270,7 @@ namespace ST_diplom
                 }
                 else if (this.currentUserID == 0)
                 {
-                    if ((this.resendCount == 0 && this.noConnectionTimer > 4000)
-                        || (this.resendCount == 1 && this.noConnectionTimer > 8000)
-                        || (this.resendCount == 2 && this.noConnectionTimer > 12000))
+                    if (this.noConnectionTimer > 4000 * (resendCount + 1))
                     {
                         ++this.resendCount;
                         SendFrame(lastSendedData, false);
@@ -284,7 +282,7 @@ namespace ST_diplom
             // обновляем окно чата, считывая все сообщения из DataController.ReadQueue
             Action<DataController.UserMessage> update = delegate(DataController.UserMessage m)
             {
-                string addLine = m.IsPublic ? String.Format("{0}: {1}\r\n", m.From, m.Text) : String.Format("@{0} > {1}: {2}\r\n", m.From, m.To, m.Text);
+                string addLine = String.Format("@{0} > {1}: {2}\r\n", m.From, m.To, m.Text);
                 
                 this.formChat.chatField.Text += addLine;
                 History.AddLine(addLine);
@@ -300,7 +298,7 @@ namespace ST_diplom
 
             Action<string> changeTitle = delegate(string title)
             {
-                formChat.Text = "Чат волчат | " + title;
+                formChat.Text = "Chat | " + title;
             };
 
             if (willCloseSelf)
@@ -344,19 +342,19 @@ namespace ST_diplom
             string recvUserName = Utils.GetString(data);
             byte[] recvMarkerWeight = Utils.GetBytes(currentMarkerWeight.Length, data);
 
-            bool isEqu = this.currentUserName == recvUserName && Array.Equals(recvMarkerWeight, currentMarkerWeight);
-            //if (isEqu)
-            //{
-            //    //for (int i = 0; i < recvMarkerWeight.Length; ++i)
-            //    //{
-            //        //if (recvMarkerWeight[i] != this.currentMarkerWeight[i])
-            //        //{
-            //        //    isEqu = false;
-            //        //    break;
-            //        //}
-            //    //}
-            //}
-
+            bool isEqu = this.currentUserName == recvUserName;
+            if (isEqu)
+            {
+                for (int i = 0; i < recvMarkerWeight.Length; ++i)
+                {
+                    if (recvMarkerWeight[i] != this.currentMarkerWeight[i])
+                    {
+                        isEqu = false;
+                        break;
+                    }
+                }
+            }
+			
             if (isEqu)
             {
                 // если в полученном пакете имя совпадает с нашим и вес кадра тоже наш
@@ -512,9 +510,13 @@ namespace ST_diplom
             Action<List<User>> action = delegate (List<User> users)
             {
                 formChat.onlineUsersList.Items.Clear();
-                formChat.onlineUsersList.Items.AddRange(users.ToArray());
+                foreach (var u in users) 
+                {
+                    formChat.onlineUsersList.Items.Add(u.Name);
+                }
             };
-            formChat.onlineUsersList.Invoke(action, usersOnline);
+            List<User> updateUsers = new List<User>(this.usersOnline);
+            formChat.onlineUsersList.Invoke(action, updateUsers);
         }
 
         private void SendData(int newMessageID, List<UserMessage> markerMessages)

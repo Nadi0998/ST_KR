@@ -48,19 +48,19 @@ namespace ST_diplom
                 MessageBox.Show("Пробелы в логине недопустимы", "Login");
                 return false;
             }
-            if(FormController.GetLogins().Contains(loginField.Text))
-            {
-                if(MessageBox.Show("This login does not exists. Register?", "Login", MessageBoxButtons.OKCancel) == DialogResult.OK)
-                {
-                    FormRegister formRegister = new FormRegister();
-                    formRegister.ShowDialog();
-                }
-                else
-                {
-                    loginField.Focus();
-                }
-                return false;
-            }
+            //if(FormController.GetLogins().Contains(loginField.Text))
+            //{
+            //    if(MessageBox.Show("This login does not exists. Register?", "Login", MessageBoxButtons.OKCancel) == DialogResult.OK)
+            //    {
+            //        FormRegister formRegister = new FormRegister();
+            //        formRegister.ShowDialog();
+            //    }
+            //    else
+            //    {
+            //        loginField.Focus();
+            //    }
+            //    return false;
+            //}
 
             getLoginInfo.login = loginField.Text;
             getLoginInfo.backComName = BackComPortName.Text;
