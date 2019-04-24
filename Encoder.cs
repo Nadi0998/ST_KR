@@ -7,8 +7,28 @@ using System.Threading.Tasks;
 
 namespace ST_diplom
 {
-    class Hamming
+    class Encoder
     {
+
+        private static readonly byte[] encodeMatrix = new byte[] 
+        {
+            0,
+            0b1011,
+            0b10110,
+            0b11101,
+            0b101100,
+            0b100111,
+            0b111010,
+            0b110001,
+            0b1011000,
+            0b1010011,
+            0b1001110,
+            0b1000101,
+            0b1110100,
+            0b1111111,
+            0b1100010,
+            0b1101001
+        };
         const int lengthFact = 5040; // = 7!
         const int lengthCode = 7;
 
@@ -24,12 +44,12 @@ namespace ST_diplom
             // byte8 -> 2 byte7
             foreach (var x in data)
             {
-                byte b7 = toHamming(x);
+                byte b7 = Encode(x);
                 for (int i = 0; i < 7; ++i)
                     bitArray.Set(pointer + i, (b7 & (1 << i)) != 0);
                 pointer += 7;
 
-                b7 = toHamming((byte)(x >> 4));
+                b7 = Encode((byte)(x >> 4));
                 for (int i = 0; i < 7; ++i)
                     bitArray.Set(pointer + i, (b7 & (1 << i)) != 0);
                 pointer += 7;
@@ -83,15 +103,9 @@ namespace ST_diplom
         }
 
         // 0000XXXX -> 0YYYYYYY
-        private static byte toHamming(byte byteMsg)
+        private static byte Encode(byte byteMsg)
         {
-            int info1 = (getBit(byteMsg, 0) + getBit(byteMsg, 1) + getBit(byteMsg, 3)) % 2;
-            int info2 = (getBit(byteMsg, 0) + getBit(byteMsg, 2) + getBit(byteMsg, 3)) % 2;
-            info2 = info2 << 1;
-            int info3 = (getBit(byteMsg, 1) + getBit(byteMsg, 2) + getBit(byteMsg, 3)) % 2;
-            info3 = info3 << 3;
-            byte newMsg = (byte)(((byteMsg >> 1) << 4) + info1 + info2 + info3 + (getBit(byteMsg, 0) << 2));
-            return newMsg;
+            return encodeMatrix[byteMsg & 0b1111];
         }
 
         // 0YYYYYYY -> 0000XXXX

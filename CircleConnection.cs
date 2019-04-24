@@ -729,7 +729,7 @@ namespace ST_diplom
                     }
                 }
 
-                safeFrame = Hamming.From(safeFrame);
+                safeFrame = Encoder.From(safeFrame);
 
                 if (safeFrame.Count > 0)
                 {
@@ -764,7 +764,7 @@ namespace ST_diplom
 
             Utils.AddHash(list);
 
-            List<byte> encoded = Hamming.To(list);
+            List<byte> encoded = Encoder.To(list);
 
             // делаем так, чтобы внутри кадра не встречалось START_BYTE
             List<byte> safeList = new List<byte>(encoded.Count);
