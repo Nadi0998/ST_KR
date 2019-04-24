@@ -539,19 +539,13 @@ namespace ST_diplom
                 }
 
                 int toUserID;
-                if (guiMsg.IsPublic)
+                User toUserTmp = this.usersOnline.Find(x => x.Name == guiMsg.To);
+                if (toUserTmp == null)
                 {
-                    toUserID = -1;
-                } else {
-                    User toUserTmp = this.usersOnline.Find(x => x.Name == guiMsg.To);
-                    if (toUserTmp == null)
-                    {
-                        // такого юзера нет, поэтому не будем ничего отправлять
-                        continue;
-                    }
-                    toUserID = toUserTmp.ID;
+                    // такого юзера нет, поэтому не будем ничего отправлять
+                    continue;
                 }
-
+                toUserID = toUserTmp.ID;
                 this.sendedMessages.Add(newMessageID, new UserMessage(newMessageID, this.currentUserID, toUserID, 0, guiMsg.Text));
                 ++newMessageID;
             }

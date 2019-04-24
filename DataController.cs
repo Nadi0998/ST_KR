@@ -28,14 +28,6 @@ namespace ST_diplom
             public string From { get; private set; }
             public string To { get; private set; }
 
-            public bool IsPublic //для широковещательной рассылки - нахуй не впёрлось
-            {
-                get
-                {
-                    return To == null || To == "";
-                }
-            }
-
             public UserMessage(string text, string from, string to)
             {
                 this.Text = text;
