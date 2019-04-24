@@ -620,46 +620,35 @@ namespace ST_diplom
             {
                 if (msg.FromID == this.currentUserID)
                 {
-                    bool success;
-                    if (msg.ToID == -1)
+                    if (msg.RecvCount == 1)
                     {
-                        // все кроме себя самого должны были получить
-                        success = msg.RecvCount == this.usersOnline.Count - 1;
-                    } else {
-                        success = msg.RecvCount == 1;
-                    }
-
-                    if (success)
-                    {
-                        this.sendedMessages.Remove(msg.ID);
+                        sendedMessages.Remove(msg.ID);
                         DataController.UserMessage guiMsg;
 
-                        User toUser = msg.ToID != -1 ? this.usersOnline.Find(x => x.ID == msg.ToID) : null;
-                        guiMsg = new DataController.UserMessage(msg.Text, this.currentUserName, toUser != null ? toUser.Name : null);
+                        User toUser = usersOnline.Find(x => x.ID == msg.ToID);
+                        guiMsg = new DataController.UserMessage(msg.Text, this.currentUserName, toUser.Name);
+                        //TODO - figure out what the heck
                         this.dataController.ReadQueue.Enqueue(guiMsg);
                     } else {
                         retMessages.Add(msg);
                     }
                 }
-                else if (msg.ToID == this.currentUserID || msg.ToID == -1)
+                else if (msg.ToID == currentUserID)
                 {
                     DataController.UserMessage guiMsg;
                     
                     User fromUser = this.usersOnline.Find(x => x.ID == msg.FromID);
-                    User toUser = msg.ToID != -1 ? this.usersOnline.Find(x => x.ID == msg.ToID) : null;
+                    //works as shit, searches for current user across all online users
+                    User toUser = this.usersOnline.Find(x => x.ID == msg.ToID);
                     if (fromUser != null)
                     {
-                        guiMsg = new DataController.UserMessage(msg.Text, fromUser.Name, toUser != null ? toUser.Name : null);
+                        guiMsg = new DataController.UserMessage(msg.Text, fromUser.Name, toUser.Name);
                         this.dataController.ReadQueue.Enqueue(guiMsg);
                     }
 
                     msg.RecvCountInc();
-                    retMessages.Add(msg);
                 }
-                else
-                {
-                    retMessages.Add(msg);
-                }
+                retMessages.Add(msg);
             }
 
             return retMessages;
