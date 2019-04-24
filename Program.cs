@@ -15,9 +15,6 @@ namespace ST_diplom
         [STAThread]
         static void Main()
         {
-
-            History.Init();
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new FormController());

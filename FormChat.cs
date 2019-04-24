@@ -57,7 +57,6 @@ namespace ST_diplom
                 if (showConnectionLost)
                 {
                     chatField.Text += "# Соединение потеряно\r\n";
-                    History.AddLine("# Соединение потеряно");
                 }
             }), true);
         }
@@ -198,11 +197,6 @@ namespace ST_diplom
                 SendMessage();
                 e.SuppressKeyPress = true;
             }
-        }
-
-        private void HistoryButton_Click(object sender, EventArgs e)
-        {
-            History.OpenHistory();
         }
 
         private void FormChat_Load(object sender, EventArgs e)

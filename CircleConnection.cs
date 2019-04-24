@@ -282,18 +282,15 @@ namespace ST_diplom
             // обновляем окно чата, считывая все сообщения из DataController.ReadQueue
             Action<DataController.UserMessage> update = delegate(DataController.UserMessage m)
             {
-                string addLine = String.Format("@{0} > {1}: {2}\r\n", m.From, m.To, m.Text);
-                
-                this.formChat.chatField.Text += addLine;
-                History.AddLine(addLine);
+                formChat.chatField.Text += String.Format("@{0} > {1}: {2}\r\n", m.From, m.To, m.Text);
 
-                this.formChat.chatField.SelectionStart = this.formChat.chatField.Text.Length;
-                this.formChat.chatField.ScrollToCaret();
+                formChat.chatField.SelectionStart = this.formChat.chatField.Text.Length;
+                formChat.chatField.ScrollToCaret();
             };
             DataController.UserMessage msg;
-            while (this.dataController.ReadQueue.TryDequeue(out msg))
+            while (dataController.ReadQueue.TryDequeue(out msg))
             {
-                this.formChat.chatField.Invoke(update, msg);
+                formChat.chatField.Invoke(update, msg);
             }
 
             Action<string> changeTitle = delegate(string title)
@@ -487,7 +484,6 @@ namespace ST_diplom
             {
                 // lord of the ring
                 string logMsg = String.Format("# Соединение установлено ({0})", this.currentUserName);
-                History.AddLine(logMsg);  //check if needed
                 this.currentState = FrameType.Data;
                 this.formChat.Invoke((Action<bool>)(delegate(bool enabled) {
                     this.formChat.msgInputField.Enabled = enabled;
@@ -531,9 +527,7 @@ namespace ST_diplom
                 {
                     formChat.Invoke((Action<bool>)(delegate(bool idle)
                     {
-                        string addLine = String.Format("@{0} > {1}: {2}\r\n", this.currentUserName, this.currentUserName, guiMsg.Text);
-                        formChat.chatField.Text += addLine;
-                        History.AddLine(addLine);
+                        formChat.chatField.Text += String.Format("@{0} > {1}: {2}\r\n", this.currentUserName, this.currentUserName, guiMsg.Text);
                     }), true);
                     continue;
                 }
@@ -583,7 +577,6 @@ namespace ST_diplom
             if (this.currentState == FrameType.IDPublish)
             {
                 string logMsg = String.Format("# Соединение установлено ({0})", this.currentUserName);
-                History.AddLine(logMsg);
 
                 this.currentState = FrameType.Data;
                 this.formChat.Invoke((Action<bool>)(delegate(bool enabled)

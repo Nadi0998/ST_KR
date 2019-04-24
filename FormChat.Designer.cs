@@ -32,7 +32,6 @@
             this.onlineUsersList = new System.Windows.Forms.ListBox();
             this.msgInputField = new System.Windows.Forms.TextBox();
             this.sendButton = new System.Windows.Forms.Button();
-            this.HistoryButton = new System.Windows.Forms.Button();
             this.switchConnectionButton = new System.Windows.Forms.Button();
             this.clearChatFieldBtn = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -84,18 +83,6 @@
             this.sendButton.UseVisualStyleBackColor = true;
             this.sendButton.Click += new System.EventHandler(this.SendButton_Click);
             // 
-            // HistoryButton
-            // 
-            this.HistoryButton.Enabled = false;
-            this.HistoryButton.Location = new System.Drawing.Point(445, 390);
-            this.HistoryButton.Name = "HistoryButton";
-            this.HistoryButton.Size = new System.Drawing.Size(97, 28);
-            this.HistoryButton.TabIndex = 4;
-            this.HistoryButton.Text = "История";
-            this.HistoryButton.UseVisualStyleBackColor = true;
-            this.HistoryButton.Visible = false;
-            this.HistoryButton.Click += new System.EventHandler(this.HistoryButton_Click);
-            // 
             // switchConnectionButton
             // 
             this.switchConnectionButton.Font = new System.Drawing.Font("Garamond", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -139,7 +126,6 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.clearChatFieldBtn);
             this.Controls.Add(this.switchConnectionButton);
-            this.Controls.Add(this.HistoryButton);
             this.Controls.Add(this.sendButton);
             this.Controls.Add(this.msgInputField);
             this.Controls.Add(this.onlineUsersList);
@@ -155,7 +141,6 @@
         #endregion
 
         public System.Windows.Forms.ListBox onlineUsersList;
-        private System.Windows.Forms.Button HistoryButton;
         public System.Windows.Forms.TextBox chatField;
         public System.Windows.Forms.TextBox msgInputField;
         public System.Windows.Forms.Button sendButton;
