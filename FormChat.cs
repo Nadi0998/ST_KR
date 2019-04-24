@@ -205,6 +205,11 @@ namespace ST_diplom
             History.OpenHistory();
         }
 
+        private void FormChat_Load(object sender, EventArgs e)
+        {
+
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             chatField.Text = "";
