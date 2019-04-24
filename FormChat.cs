@@ -35,14 +35,14 @@ namespace ST_diplom
                 Application.Exit();
             }
 
-            this.RWTimer = new Timer();
-            this.RWTimer.Interval = 250;
-            this.RWTimer.Tick += RWTick;
-            this.RWTimer.Start();
+            RWTimer = new Timer();
+            RWTimer.Interval = 250;
+            RWTimer.Tick += RWTick;
+            RWTimer.Start();
 
-            this.SwitchConnBtnTimer = new Timer();
-            this.SwitchConnBtnTimer.Interval = 1250;
-            this.SwitchConnBtnTimer.Tick += SwitchConnBtnTick;
+            SwitchConnBtnTimer = new Timer();
+            SwitchConnBtnTimer.Interval = 1250;
+            SwitchConnBtnTimer.Tick += SwitchConnBtnTick;
         }
 
         private void CloseConnectionInTick(bool showConnectionLost)
@@ -105,6 +105,7 @@ namespace ST_diplom
         //здесь можно отправить приватное сообщение - часть выпилить
         private void SendMessage()
         {
+            string caption = "ChatForm Error!";
             // если не нужно отправлять, а просто вывести на экран
             // вдруг приватное сообщение отправлено самому себе
             string user = null;
@@ -116,14 +117,14 @@ namespace ST_diplom
                 {
                     string alertMsg = "Вы пытаетесь отправить приватное сообщение, однако не ввели сообщение\r\n"
                                     + "@NICK MESSAGE";
-                    MessageBox.Show(alertMsg, "Чат Волчат");
+                    MessageBox.Show(alertMsg, caption);
                     return;
                 }
                 if (pos < 2)
                 {
                     string alertMsg = "Вы пытаетесь отправить приватное сообщение, однако оставили ник пустым\r\n"
                                     + "@NICK MESSAGE";
-                    MessageBox.Show(alertMsg, "Чат Волчат");
+                    MessageBox.Show(alertMsg, caption);
                     return;
                 }
 
@@ -133,11 +134,11 @@ namespace ST_diplom
                 {
                     string alertMsg = "Вы пытаетесь отправить приватное сообщение, но не ввели сообщение\r\n"
                                     + "@NICK MESSAGE";
-                    MessageBox.Show(alertMsg, "Чат Волчат");
+                    MessageBox.Show(alertMsg, caption);
                     return;
                 }
             } else {
-                msg = msgInputField.Text;
+                MessageBox.Show("Вы не выбрали получателя!", caption);
             }
             msgInputField.Text = "";
 
