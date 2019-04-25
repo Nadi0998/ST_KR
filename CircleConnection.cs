@@ -62,12 +62,12 @@ namespace ST_diplom
         public CircleConnection(FormChat formChat, DataController dataController, string username, string backComNumber, string forwardComNumber)
         {
             back = new SerialPort("COM" + backComNumber);
-            back.Parity = Parity.Even;
+            back.Parity = Parity.None;
             back.Handshake = Handshake.RequestToSend;
             back.BaudRate = 9600;
             back.ReadBufferSize = 4 * 1024;
             forward = new SerialPort("COM" + forwardComNumber);
-            forward.Parity = Parity.Even;
+            forward.Parity = Parity.None;
             forward.Handshake = Handshake.RequestToSend;
             forward.BaudRate = 9600;
             forward.WriteBufferSize = 4 * 1024;
