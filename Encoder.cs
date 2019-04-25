@@ -9,8 +9,19 @@ namespace ST_diplom
 {
     class Encoder
     {
+        private static readonly byte[] decodeMatrix = new byte[]
+        {
+            0,
+            0,
+            1,
+            3,
+            2,
+            6,
+            4,
+            5
+        };
 
-        private static readonly byte[] encodeMatrix = new byte[] 
+        public static readonly byte[] encodeMatrix = new byte[] 
         {
             0,
             0b1011,
@@ -29,14 +40,16 @@ namespace ST_diplom
             0b1100010,
             0b1101001
         };
-        const int lengthFact = 5040; // = 7!
+
+        private static readonly byte encodePolinom = 11;
+        // const int lengthFact = 5040; // = 7!
         const int lengthCode = 7;
 
         public static List<byte> To(List<byte> data)
         {
-            int bitsLen = data.Count * 14;
+            int bitsLen = data.Count * 14; //1Beyt -> 8bit -> 4bit inf + 3bit check = 7bit -> 14
             if (bitsLen % 8 != 0)
-                bitsLen += 8 - bitsLen % 8;
+                bitsLen += 8 - bitsLen % 8; 
 
             BitArray bitArray = new BitArray(bitsLen);
 
@@ -49,7 +62,7 @@ namespace ST_diplom
                     bitArray.Set(pointer + i, (b7 & (1 << i)) != 0);
                 pointer += 7;
 
-                b7 = Encode((byte)(x >> 4));
+                b7 = Encode((byte)(x >> 4));//left bits
                 for (int i = 0; i < 7; ++i)
                     bitArray.Set(pointer + i, (b7 & (1 << i)) != 0);
                 pointer += 7;
@@ -63,7 +76,6 @@ namespace ST_diplom
                     b |= (byte)((1 & (bitArray.Get(i * 8 + j) ? 1 : 0)) << j);
                 newData.Add(b);
             }
-
             return newData;
         }
 
@@ -88,13 +100,13 @@ namespace ST_diplom
                 for (int j = 0; j < 7; ++j)
                     b |= (byte)((1 & (bitArray.Get(i * 14 + j) ? 1 : 0)) << j);
 
-                resB = fromHamming(b);
+                resB = Decode(b);
 
                 b = 0;
                 for (int j = 0; j < 7; ++j)
                     b |= (byte)((1 & (bitArray.Get(i * 14 + 7 + j) ? 1 : 0)) << j);
 
-                resB |= (byte)(fromHamming(b) << 4);
+                resB |= (byte)(Decode(b) << 4);
 
                 newData.Add(resB);
             }
@@ -103,27 +115,64 @@ namespace ST_diplom
         }
 
         // 0000XXXX -> 0YYYYYYY
-        private static byte Encode(byte byteMsg)
+        private static byte Encode(byte byteMsg) //right bits
         {
             return encodeMatrix[byteMsg & 0b1111];
         }
 
-        // 0YYYYYYY -> 0000XXXX
-        private static byte fromHamming(byte byteMsg)
-        {
-            int errSynd1 = (getBit(byteMsg, 0) + getBit(byteMsg, 2) + getBit(byteMsg, 4) + getBit(byteMsg, 6)) % 2;
-            int errSynd2 = (getBit(byteMsg, 1) + getBit(byteMsg, 2) + getBit(byteMsg, 5) + getBit(byteMsg, 6)) % 2;
-            int errSynd3 = (getBit(byteMsg, 3) + getBit(byteMsg, 4) + getBit(byteMsg, 5) + getBit(byteMsg, 6)) % 2;
-            int errSynd = (errSynd1 << 2) + (errSynd2 << 1) + errSynd3;
 
-            byte infoMsg = byteMsg;
-            if (errSynd != 0)
+
+        // 0YYYYYYY -> 0000XXXX
+        private static byte Decode(byte byteMsg)
+        {
+            byte infMsg, sindrom;
+
+            sindrom = DivMod2(byteMsg, encodePolinom, out infMsg);
+            if (sindrom != 0)
             {
-                byte xorByte = (byte)(1 << errSynd);
-                infoMsg = (byte)(infoMsg ^ xorByte);
+                byteMsg ^= (byte)(1 << decodeMatrix[sindrom]);
+                DivMod2(byteMsg, encodePolinom, out infMsg);
             }
-            infoMsg = (byte)(getBit(infoMsg, 2) + (getBit(infoMsg, 4) << 1) + (getBit(infoMsg, 5) << 2) + (getBit(infoMsg, 6) << 3));
-            return infoMsg;
+            return infMsg;
+        }
+
+        public static byte DivMod2(byte val, byte divider, out byte res)
+        { 
+            if (val < divider)
+            {
+                res = 0;
+                return val;
+            }
+
+            int divBitPosition;
+            for (divBitPosition = 0; (1 << divBitPosition) < divider; divBitPosition++) ;
+            divBitPosition--;
+
+            byte movedPolinom = divider;
+            int pos;
+            for (pos = divBitPosition; (1 << pos) < val; pos++) ;
+            pos--;
+            movedPolinom <<= pos - divBitPosition;
+
+            byte internalRes = 0;
+            do
+            {
+                if (getBit(val, pos) == 1)
+                {
+                    val ^= movedPolinom;
+                    internalRes |= 1;
+                }
+
+                if (pos != divBitPosition)
+                {
+                    movedPolinom >>= 1;
+                    internalRes <<= 1;
+                }
+                pos--;
+            } while (pos >= divBitPosition);
+            //internalRes >>= 1;
+            res = internalRes;
+            return val;
         }
 
         private static int getBit(byte inByte, int pos)
