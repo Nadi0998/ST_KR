@@ -70,7 +70,7 @@
     <Compile Include="FormLogin.Designer.cs">
       <DependentUpon>FormLogin.cs</DependentUpon>
     </Compile>
-    <Compile Include="Hamming.cs" />
+    <Compile Include="Encoder.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FormChat.resx">
@@ -110,6 +110,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="background.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="edit-clear_7605.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

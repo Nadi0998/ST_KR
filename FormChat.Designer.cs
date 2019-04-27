@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormChat));
             this.chatField = new System.Windows.Forms.TextBox();
             this.onlineUsersList = new System.Windows.Forms.ListBox();
             this.msgInputField = new System.Windows.Forms.TextBox();
@@ -74,10 +75,10 @@
             // sendButton
             // 
             this.sendButton.Enabled = false;
-            this.sendButton.Font = new System.Drawing.Font("Garamond", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.sendButton.Location = new System.Drawing.Point(449, 331);
+            this.sendButton.Font = new System.Drawing.Font("Garamond", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.sendButton.Location = new System.Drawing.Point(437, 331);
             this.sendButton.Name = "sendButton";
-            this.sendButton.Size = new System.Drawing.Size(93, 40);
+            this.sendButton.Size = new System.Drawing.Size(105, 40);
             this.sendButton.TabIndex = 3;
             this.sendButton.Text = "Отправить";
             this.sendButton.UseVisualStyleBackColor = true;
@@ -85,23 +86,24 @@
             // 
             // switchConnectionButton
             // 
-            this.switchConnectionButton.Font = new System.Drawing.Font("Garamond", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.switchConnectionButton.Font = new System.Drawing.Font("Garamond", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.switchConnectionButton.Location = new System.Drawing.Point(445, 126);
             this.switchConnectionButton.Name = "switchConnectionButton";
             this.switchConnectionButton.Size = new System.Drawing.Size(97, 28);
             this.switchConnectionButton.TabIndex = 5;
-            this.switchConnectionButton.Text = "Отключиться";
+            this.switchConnectionButton.Text = "Закрыть";
             this.switchConnectionButton.UseVisualStyleBackColor = true;
             this.switchConnectionButton.Click += new System.EventHandler(this.SwitchConnectionButton_Click);
             // 
             // clearChatFieldBtn
             // 
+            this.clearChatFieldBtn.BackgroundImage = global::ST_diplom.Properties.Resources.edit_clear_7605;
+            this.clearChatFieldBtn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.clearChatFieldBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.clearChatFieldBtn.Location = new System.Drawing.Point(437, 255);
+            this.clearChatFieldBtn.Location = new System.Drawing.Point(445, 255);
             this.clearChatFieldBtn.Name = "clearChatFieldBtn";
-            this.clearChatFieldBtn.Size = new System.Drawing.Size(31, 34);
+            this.clearChatFieldBtn.Size = new System.Drawing.Size(34, 34);
             this.clearChatFieldBtn.TabIndex = 6;
-            this.clearChatFieldBtn.Text = "X";
             this.clearChatFieldBtn.UseVisualStyleBackColor = true;
             this.clearChatFieldBtn.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -130,6 +132,7 @@
             this.Controls.Add(this.msgInputField);
             this.Controls.Add(this.onlineUsersList);
             this.Controls.Add(this.chatField);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormChat";
             this.Text = "Chat";
             this.Load += new System.EventHandler(this.FormChat_Load);
