@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ST_diplom
 {
-    class DataController
+    public class DataController
     {
         // сообщения, принятые по сети
         public ConcurrentQueue<UserMessage> ReadQueue { get; private set; }
@@ -24,15 +24,19 @@ namespace ST_diplom
 
         public class UserMessage
         {
-            public string Text { private set; get; }
+            public string Text { set; get; }
             public string From { get; private set; }
             public string To { get; private set; }
+            public bool Update { get; set; }
+            public DateTime SendTime { get; private set; }
 
             public UserMessage(string text, string from, string to)
             {
                 this.Text = text;
                 this.From = from;
                 this.To = to;
+                Update = false;
+                SendTime = DateTime.Now;
             }
         }
 

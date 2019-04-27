@@ -91,7 +91,7 @@
             this.switchConnectionButton.Name = "switchConnectionButton";
             this.switchConnectionButton.Size = new System.Drawing.Size(97, 28);
             this.switchConnectionButton.TabIndex = 5;
-            this.switchConnectionButton.Text = "Закрыть";
+            this.switchConnectionButton.Text = "Отключиться";
             this.switchConnectionButton.UseVisualStyleBackColor = true;
             this.switchConnectionButton.Click += new System.EventHandler(this.SwitchConnectionButton_Click);
             // 

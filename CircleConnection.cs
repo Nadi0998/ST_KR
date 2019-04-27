@@ -278,19 +278,11 @@ namespace ST_diplom
                 }
             }
 
-            // GUI update
             // обновляем окно чата, считывая все сообщения из DataController.ReadQueue
-            Action<DataController.UserMessage> update = delegate(DataController.UserMessage m)
-            {
-                formChat.chatField.Text += String.Format("@{0} > {1}: {2}\r\n", m.From, m.To, m.Text);
-
-                formChat.chatField.SelectionStart = this.formChat.chatField.Text.Length;
-                formChat.chatField.ScrollToCaret();
-            };
             DataController.UserMessage msg;
             while (dataController.ReadQueue.TryDequeue(out msg))
             {
-                formChat.chatField.Invoke(update, msg);
+                formChat.AddMessage(msg);
             }
 
             Action<string> changeTitle = delegate(string title)
@@ -486,9 +478,9 @@ namespace ST_diplom
                 string logMsg = String.Format("# Соединение установлено ({0})", this.currentUserName);
                 this.currentState = FrameType.Data;
                 this.formChat.Invoke((Action<bool>)(delegate(bool enabled) {
-                    this.formChat.msgInputField.Enabled = enabled;
-                    this.formChat.sendButton.Enabled = enabled;
-                    this.formChat.chatField.Text += logMsg + "\r\n";
+                    formChat.msgInputField.Enabled = enabled;
+                    formChat.sendButton.Enabled = enabled;
+                    formChat.chatField.AppendText(logMsg + "\r\n");
                 }), true);
             }
 
@@ -615,6 +607,7 @@ namespace ST_diplom
                         User toUser = usersOnline.Find(x => x.ID == msg.ToID);
                         guiMsg = new DataController.UserMessage(msg.Text, this.currentUserName, toUser.Name);
                         //TODO - figure out what the heck
+                        guiMsg.Update = true;
                         this.dataController.ReadQueue.Enqueue(guiMsg);
                         continue;
                     }

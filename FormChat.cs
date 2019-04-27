@@ -18,6 +18,7 @@ namespace ST_diplom
         private Timer RWTimer, SwitchConnBtnTimer;
         private DataController dataController;
         private CircleConnection connection;
+        Action<DataController.UserMessage> update;
 
         public FormChat(GetLoginInfo getLogin)
         {
@@ -25,6 +26,14 @@ namespace ST_diplom
 
             this.getLogin = getLogin;
             this.dataController = new DataController();
+            update = delegate (DataController.UserMessage m)
+            {
+                chatField.Text += FormatMessage(m);
+
+                chatField.SelectionStart = chatField.Text.Length;
+                chatField.ScrollToCaret();
+            };
+
             try
             {
                 this.connection = new CircleConnection(this, this.dataController, getLogin.login, getLogin.backComName, getLogin.forwardComName);
@@ -101,6 +110,30 @@ namespace ST_diplom
             SendMessage();
         }
 
+        public void AddMessage(DataController.UserMessage msg)
+        {
+            if (msg.Update)
+            {
+                string formattedMessage = FormatMessage(msg);
+                string toReplace = FormatUnreadMessage(msg);
+                chatField.Text = chatField.Text.Replace(toReplace, formattedMessage);
+                return;
+            }
+            chatField.Invoke(update, msg);
+        }
+
+        private string FormatUnreadMessage(DataController.UserMessage m)
+        {
+            return String.Format("({0})@{1} > {2}: {3}(unread)\r\n",
+                m.SendTime.ToLongTimeString(), m.From, m.To, m.Text);
+        }
+
+        private string FormatMessage(DataController.UserMessage m)
+        {
+            return String.Format("({0})@{1} > {2}: {3}({4})\r\n", 
+                m.SendTime.ToLongTimeString(), m.From, m.To, m.Text, DateTime.Now.ToLongTimeString());
+        }
+
 
         //здесь можно отправить приватное сообщение - часть выпилить
         private void SendMessage()
@@ -139,12 +172,14 @@ namespace ST_diplom
                 }
             } else {
                 MessageBox.Show("Вы не выбрали получателя!", caption);
+                return;
             }
             msgInputField.Text = "";
 
             DataController.UserMessage newMsg = new DataController.UserMessage(msg, getLogin.login, user);
 
             this.dataController.WriteQueue.Enqueue(newMsg);
+            chatField.AppendText(FormatUnreadMessage(newMsg));
         }
 
         private void onlineUsersList_DoubleClick(object sender, EventArgs e)
