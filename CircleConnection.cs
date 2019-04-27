@@ -616,14 +616,13 @@ namespace ST_diplom
                         guiMsg = new DataController.UserMessage(msg.Text, this.currentUserName, toUser.Name);
                         //TODO - figure out what the heck
                         this.dataController.ReadQueue.Enqueue(guiMsg);
-                    } else {
-                        retMessages.Add(msg);
+                        continue;
                     }
                 }
                 else if (msg.ToID == currentUserID)
                 {
                     DataController.UserMessage guiMsg;
-                    
+
                     User fromUser = this.usersOnline.Find(x => x.ID == msg.FromID);
                     //works as shit, searches for current user across all online users
                     User toUser = this.usersOnline.Find(x => x.ID == msg.ToID);
