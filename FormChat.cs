@@ -19,13 +19,26 @@ namespace ST_diplom
         private DataController dataController;
         private CircleConnection connection;
         Action<DataController.UserMessage> update;
+        private static string SendTimeMarker { get
+            {
+                return string.Format("(send at {0})", DateTime.Now.ToLongTimeString());
+            }
+        }
+
+        public static string ReceivedTimeMarker
+        {
+            get
+            {
+                return string.Format("(received at {0})", DateTime.Now.ToLongTimeString());
+            }
+        }
 
         public FormChat(GetLoginInfo getLogin)
         {
             InitializeComponent();
 
             this.getLogin = getLogin;
-            this.dataController = new DataController();
+            dataController = new DataController();
             update = delegate (DataController.UserMessage m)
             {
                 chatField.AppendText(FormatMessage(m));
@@ -114,30 +127,17 @@ namespace ST_diplom
         {
             if (msg.Update)
             {
-                string formattedMessage = FormatMessage(msg);
-                string toReplace = FormatUnreadMessage(msg);
-                chatField.Text = chatField.Text.Replace(toReplace, formattedMessage);
+                string toReplace = msg.Text.Substring(0, msg.Text.Length - ReceivedTimeMarker.Length); //TODO
+                chatField.Text = chatField.Text.Replace(toReplace, msg.Text);
                 return;
             }
             chatField.Invoke(update, msg);
         }
 
-        private static string FormatUnreadMessage(DataController.UserMessage m)
-        {
-            return String.Format("({0})@{1} > {2}: {3}(unread)" + Environment.NewLine,
-                m.SendTime.ToLongTimeString(), m.From, m.To, m.Text);
-        }
-
         private static string FormatMessage(DataController.UserMessage m)
         {
-            return String.Format("({0})@{1} > {2}: {3}({4})" + Environment.NewLine, 
-                m.SendTime.ToLongTimeString(), m.From, m.To, m.Text, DateTime.Now.ToLongTimeString());
-        }
-
-        public static string FormatReceivedMessage(DataController.UserMessage message)
-        {
-            return String.Format("({0})@{1} > {2}: {3}" + Environment.NewLine,
-                DateTime.Now.ToLongTimeString(), message.From, message.To, message.Text);
+            return String.Format("@{0} > {1}: {2}" + Environment.NewLine, 
+                m.From, m.To, m.Text);
         }
 
 
@@ -182,10 +182,11 @@ namespace ST_diplom
             }
             msgInputField.Text = "";
 
+            msg = String.Format("{0}{1}", msg, SendTimeMarker);
             DataController.UserMessage newMsg = new DataController.UserMessage(msg, getLogin.login, user);
 
             this.dataController.WriteQueue.Enqueue(newMsg);
-            chatField.AppendText(FormatUnreadMessage(newMsg));
+            AddMessage(newMsg);
         }
 
         private void onlineUsersList_DoubleClick(object sender, EventArgs e)

@@ -28,7 +28,6 @@ namespace ST_diplom
             public string From { get; private set; }
             public string To { get; private set; }
             public bool Update { get; set; }
-            public DateTime SendTime { get; private set; }
 
             public UserMessage(string text, string from, string to)
             {
@@ -36,7 +35,6 @@ namespace ST_diplom
                 this.From = from;
                 this.To = to;
                 Update = false;
-                SendTime = DateTime.Now;
             }
         }
 

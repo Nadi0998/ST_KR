@@ -519,7 +519,7 @@ namespace ST_diplom
                 {
                     formChat.Invoke((Action<bool>)(delegate(bool idle)
                     {
-                        formChat.chatField.AppendText(FormChat.FormatReceivedMessage(guiMsg));
+                        formChat.AddMessage(guiMsg);
                     }), true);
                     continue;
                 }
@@ -623,6 +623,7 @@ namespace ST_diplom
                         guiMsg = new DataController.UserMessage(msg.Text, fromUser.Name, toUser.Name);
                         this.dataController.ReadQueue.Enqueue(guiMsg);
                     }
+                    msg.Text += FormChat.ReceivedTimeMarker;
 
                     msg.RecvCountInc();
                 }
@@ -929,7 +930,7 @@ namespace ST_diplom
             public int ToID { get; private set; }
             public int FromID { get; private set; }
             public int RecvCount { get; private set; }
-            public string Text { get; private set; }
+            public string Text { get; set; }
 
             public UserMessage(int id, int fromID, int toID, int recvCount, string text)
             {
