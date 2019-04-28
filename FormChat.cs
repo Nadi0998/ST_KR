@@ -28,7 +28,7 @@ namespace ST_diplom
             this.dataController = new DataController();
             update = delegate (DataController.UserMessage m)
             {
-                chatField.Text += FormatMessage(m);
+                chatField.AppendText(FormatMessage(m));
 
                 chatField.SelectionStart = chatField.Text.Length;
                 chatField.ScrollToCaret();
@@ -65,7 +65,7 @@ namespace ST_diplom
                 onlineUsersList.Items.Clear();
                 if (showConnectionLost)
                 {
-                    chatField.Text += "# Соединение потеряно" + Environment.NewLine;
+                    chatField.AppendText("# Соединение потеряно" + Environment.NewLine);
                 }
             }), true);
         }
@@ -122,16 +122,22 @@ namespace ST_diplom
             chatField.Invoke(update, msg);
         }
 
-        private string FormatUnreadMessage(DataController.UserMessage m)
+        private static string FormatUnreadMessage(DataController.UserMessage m)
         {
             return String.Format("({0})@{1} > {2}: {3}(unread)" + Environment.NewLine,
                 m.SendTime.ToLongTimeString(), m.From, m.To, m.Text);
         }
 
-        private string FormatMessage(DataController.UserMessage m)
+        private static string FormatMessage(DataController.UserMessage m)
         {
             return String.Format("({0})@{1} > {2}: {3}({4})" + Environment.NewLine, 
                 m.SendTime.ToLongTimeString(), m.From, m.To, m.Text, DateTime.Now.ToLongTimeString());
+        }
+
+        public static string FormatReceivedMessage(DataController.UserMessage message)
+        {
+            return String.Format("({0})@{1} > {2}: {3}" + Environment.NewLine,
+                DateTime.Now.ToLongTimeString(), message.From, message.To, message.Text);
         }
 
 

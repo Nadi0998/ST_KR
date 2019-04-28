@@ -519,7 +519,7 @@ namespace ST_diplom
                 {
                     formChat.Invoke((Action<bool>)(delegate(bool idle)
                     {
-                        formChat.chatField.Text += String.Format("@{0} > {1}: {2}" + Environment.NewLine, this.currentUserName, this.currentUserName, guiMsg.Text);
+                        formChat.chatField.AppendText(FormChat.FormatReceivedMessage(guiMsg));
                     }), true);
                     continue;
                 }
@@ -606,7 +606,6 @@ namespace ST_diplom
 
                         User toUser = usersOnline.Find(x => x.ID == msg.ToID);
                         guiMsg = new DataController.UserMessage(msg.Text, this.currentUserName, toUser.Name);
-                        //TODO - figure out what the heck
                         guiMsg.Update = true;
                         this.dataController.ReadQueue.Enqueue(guiMsg);
                         continue;
