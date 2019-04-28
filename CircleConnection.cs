@@ -480,7 +480,7 @@ namespace ST_diplom
                 this.formChat.Invoke((Action<bool>)(delegate(bool enabled) {
                     formChat.msgInputField.Enabled = enabled;
                     formChat.sendButton.Enabled = enabled;
-                    formChat.chatField.AppendText(logMsg + "\r\n");
+                    formChat.chatField.AppendText(logMsg + Environment.NewLine);
                 }), true);
             }
 
@@ -519,7 +519,7 @@ namespace ST_diplom
                 {
                     formChat.Invoke((Action<bool>)(delegate(bool idle)
                     {
-                        formChat.chatField.Text += String.Format("@{0} > {1}: {2}\r\n", this.currentUserName, this.currentUserName, guiMsg.Text);
+                        formChat.chatField.Text += String.Format("@{0} > {1}: {2}" + Environment.NewLine, this.currentUserName, this.currentUserName, guiMsg.Text);
                     }), true);
                     continue;
                 }
@@ -575,7 +575,7 @@ namespace ST_diplom
                 {
                     this.formChat.msgInputField.Enabled = enabled;
                     this.formChat.sendButton.Enabled = enabled;
-                    this.formChat.chatField.Text += logMsg + "\r\n";
+                    this.formChat.chatField.Text += logMsg + Environment.NewLine;
                 }), true);
             }
 

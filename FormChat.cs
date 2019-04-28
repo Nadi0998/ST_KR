@@ -65,7 +65,7 @@ namespace ST_diplom
                 onlineUsersList.Items.Clear();
                 if (showConnectionLost)
                 {
-                    chatField.Text += "# Соединение потеряно\r\n";
+                    chatField.Text += "# Соединение потеряно" + Environment.NewLine;
                 }
             }), true);
         }
@@ -124,13 +124,13 @@ namespace ST_diplom
 
         private string FormatUnreadMessage(DataController.UserMessage m)
         {
-            return String.Format("({0})@{1} > {2}: {3}(unread)\r\n",
+            return String.Format("({0})@{1} > {2}: {3}(unread)" + Environment.NewLine,
                 m.SendTime.ToLongTimeString(), m.From, m.To, m.Text);
         }
 
         private string FormatMessage(DataController.UserMessage m)
         {
-            return String.Format("({0})@{1} > {2}: {3}({4})\r\n", 
+            return String.Format("({0})@{1} > {2}: {3}({4})" + Environment.NewLine, 
                 m.SendTime.ToLongTimeString(), m.From, m.To, m.Text, DateTime.Now.ToLongTimeString());
         }
 
@@ -148,14 +148,14 @@ namespace ST_diplom
                 int pos = msgInputField.Text.IndexOf(' ');
                 if (pos == -1)
                 {
-                    string alertMsg = "Вы пытаетесь отправить приватное сообщение, однако не ввели сообщение\r\n"
+                    string alertMsg = "Вы пытаетесь отправить приватное сообщение, однако не ввели сообщение" + Environment.NewLine
                                     + "@NICK MESSAGE";
                     MessageBox.Show(alertMsg, caption);
                     return;
                 }
                 if (pos < 2)
                 {
-                    string alertMsg = "Вы пытаетесь отправить приватное сообщение, однако оставили ник пустым\r\n"
+                    string alertMsg = "Вы пытаетесь отправить приватное сообщение, однако оставили ник пустым" + Environment.NewLine
                                     + "@NICK MESSAGE";
                     MessageBox.Show(alertMsg, caption);
                     return;
@@ -165,7 +165,7 @@ namespace ST_diplom
                 msg = msgInputField.Text.Substring(pos + 1);
                 if (msg == "")
                 {
-                    string alertMsg = "Вы пытаетесь отправить приватное сообщение, но не ввели сообщение\r\n"
+                    string alertMsg = "Вы пытаетесь отправить приватное сообщение, но не ввели сообщение" + Environment.NewLine
                                     + "@NICK MESSAGE";
                     MessageBox.Show(alertMsg, caption);
                     return;
