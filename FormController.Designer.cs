@@ -1,4 +1,4 @@
-﻿namespace ST_diplom
+﻿namespace ST_Cursach
 {
     partial class FormController
     {

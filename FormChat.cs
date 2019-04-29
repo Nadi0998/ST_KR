@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
 
-namespace ST_diplom
+namespace ST_Cursach
 {
     public partial class FormChat : Form
     {

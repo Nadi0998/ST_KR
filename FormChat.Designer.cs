@@ -1,4 +1,4 @@
-﻿namespace ST_diplom
+﻿namespace ST_Cursach
 {
     partial class FormChat
     {
@@ -97,7 +97,7 @@
             // 
             // clearChatFieldBtn
             // 
-            this.clearChatFieldBtn.BackgroundImage = global::ST_diplom.Properties.Resources.edit_clear_7605;
+            this.clearChatFieldBtn.BackgroundImage = global::ST_Cursach.Properties.Resources.edit_clear_7605;
             this.clearChatFieldBtn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.clearChatFieldBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.clearChatFieldBtn.Location = new System.Drawing.Point(445, 255);
@@ -122,7 +122,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackgroundImage = global::ST_diplom.Properties.Resources.background1;
+            this.BackgroundImage = global::ST_Cursach.Properties.Resources.background1;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(552, 430);
             this.Controls.Add(this.label1);

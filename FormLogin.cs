@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ST_diplom
+namespace ST_Cursach
 {
     public partial class FormLogin : Form
     {
@@ -19,8 +19,6 @@ namespace ST_diplom
             InitializeComponent();
 
             this.getLoginInfo = getLoginInfo;
-
-            loginField.Text = (sizeof(char)).ToString();
         }
 
         private void loginButton_Click(object sender, EventArgs e)
@@ -42,25 +40,30 @@ namespace ST_diplom
             if (loginField.Text == "")
             {
                 MessageBox.Show("Логин не может быть пуст", "Login");
+                loginField.SelectAll();
+                loginField.Focus();
+                return false;
+            }
+            if (BackComPortName.Text == "")
+            {
+                BackComPortName.SelectAll();
+                BackComPortName.Focus();
+                return false;
+            }
+            if (ForwardComPortName.Text == "")
+            {
+                ForwardComPortName.SelectAll();
+                ForwardComPortName.Focus();
+                return false;
             }
             if (loginField.Text.IndexOf(' ') != -1)
             {
                 MessageBox.Show("Пробелы в логине недопустимы", "Login");
+                loginField.SelectAll();
+                loginField.Focus();
                 return false;
             }
-            //if(FormController.GetLogins().Contains(loginField.Text))
-            //{
-            //    if(MessageBox.Show("This login does not exists. Register?", "Login", MessageBoxButtons.OKCancel) == DialogResult.OK)
-            //    {
-            //        FormRegister formRegister = new FormRegister();
-            //        formRegister.ShowDialog();
-            //    }
-            //    else
-            //    {
-            //        loginField.Focus();
-            //    }
-            //    return false;
-            //}
+           
 
             getLoginInfo.login = loginField.Text;
             getLoginInfo.backComName = BackComPortName.Text;
@@ -68,44 +71,9 @@ namespace ST_diplom
             return true;
         }
 
-        private void FormLogin_Load(object sender, EventArgs e)
+        private void FormLogin_KeyDown(object sender, KeyEventArgs e)
         {
-
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void FormLogin_Load_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void BackComPortName_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void BackComPortName_TextChanged_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void loginLabel_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
+            MessageBox.Show("KeyDown on form");
         }
     }
 }

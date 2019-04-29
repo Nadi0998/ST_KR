@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ST_diplom
+namespace ST_Cursach
 {
     public partial class FormController : Form
     {
@@ -29,17 +29,6 @@ namespace ST_diplom
             FormChat formChat = new FormChat(getLogin);
             formChat.ShowDialog();
             Application.Exit();
-        }
-
-        public static List<String> GetLogins()
-        {
-            return new List<String>(1);
-            //читать из файла
-        }
-
-        public static void addLogin(String newLogin)
-        {
-            //писать в файл
         }
     }
 

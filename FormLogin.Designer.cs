@@ -1,4 +1,4 @@
-﻿namespace ST_diplom
+﻿namespace ST_Cursach
 {
     partial class FormLogin
     {
@@ -58,7 +58,6 @@
             this.loginLabel.Size = new System.Drawing.Size(96, 21);
             this.loginLabel.TabIndex = 1;
             this.loginLabel.Text = "Ваш логин";
-            this.loginLabel.Click += new System.EventHandler(this.loginLabel_Click);
             // 
             // loginButton
             // 
@@ -71,6 +70,7 @@
             this.loginButton.Text = "Войти";
             this.loginButton.UseVisualStyleBackColor = false;
             this.loginButton.Click += new System.EventHandler(this.loginButton_Click);
+            this.loginButton.KeyDown += new System.Windows.Forms.KeyEventHandler(this.loginField_KeyDown);
             // 
             // BackComPortName
             // 
@@ -79,7 +79,7 @@
             this.BackComPortName.Name = "BackComPortName";
             this.BackComPortName.Size = new System.Drawing.Size(121, 22);
             this.BackComPortName.TabIndex = 2;
-            this.BackComPortName.TextChanged += new System.EventHandler(this.BackComPortName_TextChanged_1);
+            this.BackComPortName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.loginField_KeyDown);
             // 
             // ForwardComPortName
             // 
@@ -88,6 +88,7 @@
             this.ForwardComPortName.Name = "ForwardComPortName";
             this.ForwardComPortName.Size = new System.Drawing.Size(120, 22);
             this.ForwardComPortName.TabIndex = 3;
+            this.ForwardComPortName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.loginField_KeyDown);
             // 
             // label1
             // 
@@ -99,7 +100,6 @@
             this.label1.Size = new System.Drawing.Size(95, 21);
             this.label1.TabIndex = 5;
             this.label1.Text = "Back COM";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // label2
             // 
@@ -111,7 +111,6 @@
             this.label2.Size = new System.Drawing.Size(122, 21);
             this.label2.TabIndex = 6;
             this.label2.Text = "Forward COM";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // label3
             // 
@@ -129,7 +128,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.BackgroundImage = global::ST_diplom.Properties.Resources.background1;
+            this.BackgroundImage = global::ST_Cursach.Properties.Resources.background1;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(333, 302);
             this.Controls.Add(this.label3);
@@ -143,6 +142,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormLogin";
             this.Text = "Chat";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormLogin_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 
