@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO.Ports;
 
-namespace ST_diplom
+namespace ST_Cursach
 {
     class CircleConnection
     {
