@@ -56,12 +56,12 @@ namespace ST_Cursach
                 MessageBox.Show("Невозможно открыть заданные COM порты");
                 Application.Exit();
             }
-
+            //таймер для обработки маркера
             RWTimer = new Timer();
             RWTimer.Interval = 250;
             RWTimer.Tick += RWTick;
             RWTimer.Start();
-
+            //таймер для отображения кнопки закрытия
             SwitchConnBtnTimer = new Timer();
             SwitchConnBtnTimer.Interval = 1250;
             SwitchConnBtnTimer.Tick += SwitchConnBtnTick;
@@ -70,7 +70,7 @@ namespace ST_Cursach
         private void CloseConnectionInTick(bool showConnectionLost)
         {
             DateTime time = new DateTime(DateTime.Now.Ticks);
-            while (!connection.CanClose() && (DateTime.Now - time).TotalMilliseconds < 2500);
+            while (!connection.CanClose() && (DateTime.Now - time).TotalMilliseconds < 2500); // нечего передавать и время работы
             connection.Close();
             connection = new CircleConnection(this, this.dataController, getLogin.login, getLogin.backComName, getLogin.forwardComName);
             this.Invoke((Action<bool>)(delegate(bool idle)
@@ -141,7 +141,6 @@ namespace ST_Cursach
         }
 
 
-        //здесь можно отправить приватное сообщение - часть выпилить
         private void SendMessage()
         {
             string caption = "ChatForm Error!";
@@ -154,14 +153,14 @@ namespace ST_Cursach
                 int pos = msgInputField.Text.IndexOf(' ');
                 if (pos == -1)
                 {
-                    string alertMsg = "Вы пытаетесь отправить приватное сообщение, однако не ввели сообщение" + Environment.NewLine
+                    string alertMsg = "Вы пытаетесь отправить сообщение, однако ничего не ввели" + Environment.NewLine
                                     + "@NICK MESSAGE";
                     MessageBox.Show(alertMsg, caption);
                     return;
                 }
                 if (pos < 2)
                 {
-                    string alertMsg = "Вы пытаетесь отправить приватное сообщение, однако оставили ник пустым" + Environment.NewLine
+                    string alertMsg = "Вы пытаетесь отправить сообщение, однако не выбрали получателя" + Environment.NewLine
                                     + "@NICK MESSAGE";
                     MessageBox.Show(alertMsg, caption);
                     return;
@@ -171,13 +170,13 @@ namespace ST_Cursach
                 msg = msgInputField.Text.Substring(pos + 1);
                 if (msg == "")
                 {
-                    string alertMsg = "Вы пытаетесь отправить приватное сообщение, но не ввели сообщение" + Environment.NewLine
+                    string alertMsg = "Вы пытаетесь отправить сообщение, однако ничего не ввели" + Environment.NewLine
                                     + "@NICK MESSAGE";
                     MessageBox.Show(alertMsg, caption);
                     return;
                 }
             } else {
-                MessageBox.Show("Вы не выбрали получателя!", caption);
+                chatField.AppendText(msg);
                 return;
             }
             msgInputField.Text = "";
