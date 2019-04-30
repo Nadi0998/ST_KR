@@ -86,7 +86,7 @@
             // 
             // switchConnectionButton
             // 
-            this.switchConnectionButton.Font = new System.Drawing.Font("Garamond", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.switchConnectionButton.Font = new System.Drawing.Font("Garamond", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.switchConnectionButton.Location = new System.Drawing.Point(445, 126);
             this.switchConnectionButton.Name = "switchConnectionButton";
             this.switchConnectionButton.Size = new System.Drawing.Size(97, 28);

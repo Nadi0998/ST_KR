@@ -176,7 +176,8 @@ namespace ST_Cursach
                     return;
                 }
             } else {
-                chatField.AppendText(msg);
+                chatField.AppendText(msgInputField.Text + Environment.NewLine);
+                msgInputField.Text = "";
                 return;
             }
             msgInputField.Text = "";
@@ -185,7 +186,10 @@ namespace ST_Cursach
             DataController.UserMessage newMsg = new DataController.UserMessage(msg, getLogin.login, user);
 
             this.dataController.WriteQueue.Enqueue(newMsg);
-            AddMessage(newMsg);
+            if(newMsg.To != getLogin.login)
+            {
+                AddMessage(newMsg);
+            }
         }
 
         private void onlineUsersList_DoubleClick(object sender, EventArgs e)

@@ -449,7 +449,7 @@ namespace ST_Cursach
         }
 
 
-        //only main pisya executes this
+        //only main PC executes this
         private void SendIDPublish()
         {
             List<byte> data = Utils.CreateFrame();
