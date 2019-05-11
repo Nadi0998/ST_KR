@@ -700,6 +700,7 @@ namespace ST_Cursach
             foreach (var frame in ret)
             {
                 List<byte> safeFrame = new List<byte>(frame.Count);
+                //0x7F is a byte staffing mechanism to ensure there is no START_BYTE inside the frame
                 bool is0x7F = false;
                 foreach (var b in frame)
                 {
