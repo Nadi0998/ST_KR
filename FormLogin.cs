@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ST_Cursach
@@ -69,11 +62,6 @@ namespace ST_Cursach
             getLoginInfo.backComName = BackComPortName.Text;
             getLoginInfo.forwardComName = ForwardComPortName.Text;
             return true;
-        }
-
-        private void FormLogin_KeyDown(object sender, KeyEventArgs e)
-        {
-            MessageBox.Show("KeyDown on form");
         }
     }
 }
