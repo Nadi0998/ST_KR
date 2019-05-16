@@ -480,7 +480,8 @@ namespace ST_Cursach
                 this.formChat.Invoke((Action<bool>)(delegate(bool enabled) {
                     formChat.msgInputField.Enabled = enabled;
                     formChat.sendButton.Enabled = enabled;
-                    formChat.chatField.AppendText(logMsg + Environment.NewLine);
+                    formChat.LogBox.AppendText(logMsg + Environment.NewLine);
+                    formChat.username = currentUserName;
                 }), true);
             }
 
@@ -512,17 +513,10 @@ namespace ST_Cursach
             DataController.UserMessage guiMsg;
             while (this.dataController.WriteQueue.TryDequeue(out guiMsg))
             {
-                if (guiMsg.Text == null || guiMsg.Text == "")
+                if ((guiMsg.Text == null || guiMsg.Text == "") && !guiMsg.ACK)
                     continue;
 
-                if (guiMsg.To == this.currentUserName)
-                {
-                    formChat.Invoke((Action<bool>)(delegate(bool idle)
-                    {
-                        formChat.AddMessage(guiMsg);
-                    }), true);
-                    continue;
-                }
+                //todo: delete
 
                 int toUserID;
                 User toUserTmp = this.usersOnline.Find(x => x.Name == guiMsg.To);
@@ -532,7 +526,9 @@ namespace ST_Cursach
                     continue;
                 }
                 toUserID = toUserTmp.ID;
-                this.sendedMessages.Add(newMessageID, new UserMessage(newMessageID, this.currentUserID, toUserID, 0, guiMsg.Text));
+                int recvCount = guiMsg.ACK ? 0xF0 : 0;
+                string text = guiMsg.ACK ? guiMsg.ACK_ID.ToString() : guiMsg.Text;
+                sendedMessages.Add(newMessageID, new UserMessage(newMessageID, currentUserID, toUserID, recvCount, text));
                 ++newMessageID;
             }
 
@@ -575,7 +571,7 @@ namespace ST_Cursach
                 {
                     this.formChat.msgInputField.Enabled = enabled;
                     this.formChat.sendButton.Enabled = enabled;
-                    this.formChat.chatField.Text += logMsg + Environment.NewLine;
+                    this.formChat.LogBox.Text += logMsg + Environment.NewLine;
                 }), true);
             }
 
@@ -599,32 +595,45 @@ namespace ST_Cursach
             {
                 if (msg.FromID == this.currentUserID)
                 {
-                    if (msg.RecvCount == 1)
+                    System.IO.File.AppendAllText("log.txt", String.Format("I'm {0}, my ID {1}, msg ID {2}, from {3}, to {4}, rcvCnt {5}, Text {6} from this USER" + Environment.NewLine,
+                        currentUserName, currentUserID, msg.ID, msg.FromID, msg.ToID, msg.RecvCount, msg.Text));
+                    if ((msg.RecvCount & 1) == 1)
                     {
                         sendedMessages.Remove(msg.ID);
-                        DataController.UserMessage guiMsg;
+                        if ((msg.RecvCount & 0xF0) != 0xF0)
+                        {
+                            DataController.UserMessage guiMsg;
 
-                        User toUser = usersOnline.Find(x => x.ID == msg.ToID);
-                        guiMsg = new DataController.UserMessage(msg.Text, this.currentUserName, toUser.Name);
-                        guiMsg.Update = true;
-                        this.dataController.ReadQueue.Enqueue(guiMsg);
+                            User toUser = usersOnline.Find(x => x.ID == msg.ToID);
+                            guiMsg = new DataController.UserMessage(msg.Text, this.currentUserName, toUser.Name);
+                            guiMsg.ID = msg.ID;
+                            this.dataController.ReadQueue.Enqueue(guiMsg);
+                        }
                         continue;
                     }
                 }
                 else if (msg.ToID == currentUserID)
                 {
-                    DataController.UserMessage guiMsg;
-
-                    User fromUser = this.usersOnline.Find(x => x.ID == msg.FromID);
-                    //works as shit, searches for current user across all online users
-                    User toUser = this.usersOnline.Find(x => x.ID == msg.ToID);
-                    if (fromUser != null)
+                    System.IO.File.AppendAllText("log.txt", String.Format("I'm {0}, my ID {1}, msg ID {2}, from {3}, to {4}, rcvCnt {5}, Text {6} to this USER" + Environment.NewLine,
+                        currentUserName, currentUserID, msg.ID, msg.FromID, msg.ToID, msg.RecvCount, msg.Text));
+                    if ((msg.RecvCount & 0xF0) == 0xF0)
                     {
-                        guiMsg = new DataController.UserMessage(msg.Text, fromUser.Name, toUser.Name);
-                        this.dataController.ReadQueue.Enqueue(guiMsg);
+                        formChat.SetMessageRead(int.Parse(msg.Text));
                     }
-                    msg.Text += FormChat.ReceivedTimeMarker;
+                    else
+                    {
+                        DataController.UserMessage guiMsg;
 
+                        User fromUser = this.usersOnline.Find(x => x.ID == msg.FromID);
+                        //works as shit, searches for current user across all online users
+                        User toUser = this.usersOnline.Find(x => x.ID == msg.ToID);
+                        if (fromUser != null)
+                        {
+                            guiMsg = new DataController.UserMessage(msg.Text, fromUser.Name, toUser.Name);
+                            guiMsg.ID = msg.ID;
+                            this.dataController.ReadQueue.Enqueue(guiMsg);
+                        }
+                    }
                     msg.RecvCountInc();
                 }
                 retMessages.Add(msg);
@@ -935,11 +944,11 @@ namespace ST_Cursach
 
             public UserMessage(int id, int fromID, int toID, int recvCount, string text)
             {
-                this.ID = id;
-                this.FromID = fromID;
-                this.ToID = toID;
-                this.RecvCount = recvCount;
-                this.Text = text;
+                ID = id;
+                FromID = fromID;
+                ToID = toID;
+                RecvCount = recvCount;
+                Text = text;
             }
 
             public void RecvCountInc()
