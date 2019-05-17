@@ -6,37 +6,26 @@ namespace ST_Cursach
     public partial class FormChat : Form
     {
         private readonly GetLoginInfo getLogin;
+        public string username;
         private Timer RWTimer, SwitchConnBtnTimer;
         private DataController dataController;
         private CircleConnection connection;
-        Action<DataController.UserMessage> update;
-        private static string SendTimeMarker { get
-            {
-                return string.Format("(send at {0})", DateTime.Now.ToLongTimeString());
-            }
-        }
 
-        public static string ReceivedTimeMarker
-        {
-            get
-            {
-                return string.Format("(received at {0})", DateTime.Now.ToLongTimeString());
-            }
-        }
+        private static readonly int HEADER_COUNT = 6;
+        private static readonly int MSG_ID_HEADER = 0;
+        private static readonly int MSG_FROM_HEADER = 1;
+        private static readonly int MSG_TO_HEADER = 2;
+        private static readonly int MSG_SHORT_HEADER = 3;
+        private static readonly int MSG_FULL_HEADER = 4;
+        private static readonly int MSG_READ_BOOL_HEADER = 5;
 
         public FormChat(GetLoginInfo getLogin)
         {
             InitializeComponent();
 
             this.getLogin = getLogin;
+            username = getLogin.login;
             dataController = new DataController();
-            update = delegate (DataController.UserMessage m)
-            {
-                chatField.AppendText(FormatMessage(m));
-
-                chatField.SelectionStart = chatField.Text.Length;
-                chatField.ScrollToCaret();
-            };
 
             try
             {
@@ -69,7 +58,7 @@ namespace ST_Cursach
                 onlineUsersList.Items.Clear();
                 if (showConnectionLost)
                 {
-                    chatField.AppendText("# Соединение потеряно" + Environment.NewLine);
+                    LogBox.AppendText("# Соединение потеряно" + Environment.NewLine);
                 }
             }), true);
         }
@@ -116,19 +105,43 @@ namespace ST_Cursach
 
         public void AddMessage(DataController.UserMessage msg)
         {
-            if (msg.Update)
-            {
-                string toReplace = msg.Text.Substring(0, msg.Text.Length - ReceivedTimeMarker.Length); //TODO
-                chatField.Text = chatField.Text.Replace(toReplace, msg.Text);
-                return;
-            }
-            chatField.Invoke(update, msg);
+            msgListView.Items.Add(FormatEnvelope(msg));
         }
+
+        public void SetMessageRead(int msgId)
+        {
+            System.IO.File.AppendAllText("log.txt", String.Format("I'm {0}, setting ACK for msgId {1}" + Environment.NewLine,
+                        username, msgId));
+            foreach (ListViewItem item in msgListView.Items)
+            {
+                if (item.Text.Equals(msgId.ToString()))
+                {
+                    System.IO.File.AppendAllText("log.txt", String.Format("I'm {0}, setting ACK for msgId {1} inside loop" + Environment.NewLine,
+                        username, msgId));
+                    item.SubItems[MSG_READ_BOOL_HEADER].Text = "1";
+                }
+            }
+        }
+
+        //todo
+        public void AddMessageSelf(DataController.UserMessage msg) { }
 
         private static string FormatMessage(DataController.UserMessage m)
         {
             return String.Format("@{0} > {1}: {2}" + Environment.NewLine, 
                 m.From, m.To, m.Text);
+        }
+
+        private ListViewItem FormatEnvelope(DataController.UserMessage m)
+        {
+            string[] items = new string[HEADER_COUNT];
+            items[MSG_ID_HEADER] = m.ID.ToString();
+            items[MSG_FROM_HEADER] = m.From;
+            items[MSG_TO_HEADER] = m.To;
+            items[MSG_SHORT_HEADER] = m.Text.Length > 5 ? m.Text.Substring(0, 5) + "..." : m.Text;
+            items[MSG_FULL_HEADER] = m.Text;
+            items[MSG_READ_BOOL_HEADER] = "0";
+            return new ListViewItem(items);
         }
 
 
@@ -166,21 +179,27 @@ namespace ST_Cursach
                     MessageBox.Show(alertMsg, caption);
                     return;
                 }
+                if (user.Equals(username))
+                {
+                    LogBox.AppendText(msgInputField.Text + Environment.NewLine);
+                    msgInputField.Text = "";
+                    return;
+                }
             } else {
-                chatField.AppendText(msgInputField.Text + Environment.NewLine);
+                //TODO: FIX
+                LogBox.AppendText(msgInputField.Text + Environment.NewLine);
                 msgInputField.Text = "";
                 return;
             }
             msgInputField.Text = "";
 
-            msg = String.Format("{0}{1}", msg, SendTimeMarker);
             DataController.UserMessage newMsg = new DataController.UserMessage(msg, getLogin.login, user);
 
             this.dataController.WriteQueue.Enqueue(newMsg);
-            if(newMsg.To != getLogin.login)
-            {
-                AddMessage(newMsg);
-            }
+            //if(newMsg.To != getLogin.login)
+            //{
+            //    AddMessage(newMsg);
+            //}
         }
 
         private void onlineUsersList_DoubleClick(object sender, EventArgs e)
@@ -241,9 +260,58 @@ namespace ST_Cursach
 
         }
 
+        private void msgListView_ItemActivate(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in msgListView.SelectedItems)
+            {
+                messageBox.Text = item.SubItems[MSG_FULL_HEADER].Text;
+                //messageBox.Text = "";
+                //foreach (ListViewItem.ListViewSubItem sub in item.SubItems)
+                //{
+                //    messageBox.Text += sub.Text + " ";
+                //}
+                if (item.SubItems[MSG_READ_BOOL_HEADER].Text.Equals("0") && !item.SubItems[MSG_FROM_HEADER].Text.Equals(username))
+                {
+
+                    item.SubItems[MSG_READ_BOOL_HEADER].Text = "1";
+                    int id = int.Parse(item.SubItems[MSG_ID_HEADER].Text);
+                    System.IO.File.AppendAllText("log.txt", String.Format("I'm {0}, msg ID {1}, from {2}, to {3}, Text {4} sending ACK" + Environment.NewLine,
+                        username, id, item.SubItems[MSG_FROM_HEADER].Text, item.SubItems[MSG_TO_HEADER].Text, item.SubItems[MSG_FULL_HEADER].Text));
+                    dataController.WriteQueue.Enqueue(
+                        new DataController.UserMessage(id,
+                            item.SubItems[MSG_TO_HEADER].Text,
+                            item.SubItems[MSG_FROM_HEADER].Text));
+                }
+
+
+            }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void msgListView_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            messageBox.Clear();
+            foreach (ListViewItem item in msgListView.Items)
+            {
+                messageBox.Text += item.Text +", ";
+                foreach (ListViewItem.ListViewSubItem subItem in item.SubItems)
+                    messageBox.Text += subItem.Text + " ";
+                messageBox.Text += Environment.NewLine;
+            }
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
-            chatField.Text = "";
+            messageBox.Text = "";
         }
     }
 }

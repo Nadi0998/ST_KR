@@ -24,17 +24,28 @@ namespace ST_Cursach
 
         public class UserMessage
         {
+            public int ID { set; get; }
             public string Text { set; get; }
             public string From { get; private set; }
             public string To { get; private set; }
-            public bool Update { get; set; }
+            public bool ACK { get; private set; }
+            public int ACK_ID { get; private set; }
 
             public UserMessage(string text, string from, string to)
             {
                 this.Text = text;
                 this.From = from;
                 this.To = to;
-                Update = false;
+                ACK = false;
+            }
+
+            public UserMessage(int ackID, string from, string to)
+            {
+                From = from;
+                To = to;
+                ACK = true;
+                ACK_ID = ackID;
+                Text = "";
             }
         }
 
